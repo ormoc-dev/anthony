@@ -1251,7 +1251,6 @@ body {
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.3s ease;
-    overflow: hidden;
 }
 
 .fullscreen-prompt {
@@ -1321,7 +1320,7 @@ body {
 
 /* Fullscreen active state */
 body.fullscreen-active {
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 /* Hide overlay on desktop */
