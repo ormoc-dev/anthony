@@ -532,8 +532,14 @@
 
         if (isFullscreen) {
           document.body.classList.add("fullscreen-active");
+          // Ensure scrolling is enabled in fullscreen
+          document.body.style.overflow = "auto";
+          document.documentElement.style.overflow = "auto";
         } else {
           document.body.classList.remove("fullscreen-active");
+          // Reset overflow when exiting fullscreen
+          document.body.style.overflow = "";
+          document.documentElement.style.overflow = "";
         }
       }
     </script>
