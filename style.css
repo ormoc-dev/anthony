@@ -1967,6 +1967,7 @@ body {
     width: 300px;
     height: 300px;
     perspective: 1000px;
+    margin: 0 auto; /* Center the card */
   }
   
   .card {
@@ -2196,4 +2197,241 @@ body {
   
   .parent:hover .card .logo .circle5 {
     transform: translate3d(0, 0, 120px);
+  }
+
+  /* Mobile Responsive Fixes for the 3D Card */
+  @media (max-width: 768px) {
+    .parent {
+      width: 280px;
+      height: 280px;
+      perspective: 800px;
+    }
+    
+    .content {
+      padding: 80px 40px 0px 20px;
+    }
+    
+    .content .title {
+      font-size: 18px;
+    }
+    
+    .content .text {
+      font-size: 13px;
+      margin-top: 15px;
+    }
+    
+    .bottom {
+      padding: 8px 10px;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+    }
+    
+    .bottom .social-buttons-container .social-button {
+      width: 25px;
+      padding: 4px;
+    }
+    
+    .bottom .social-buttons-container .social-button .svg {
+      width: 12px;
+    }
+    
+    .bottom .view-more .view-more-button {
+      font-size: 11px;
+    }
+    
+    .logo .circle1 {
+      width: 140px;
+    }
+    
+    .logo .circle2 {
+      width: 115px;
+    }
+    
+    .logo .circle3 {
+      width: 90px;
+    }
+    
+    .logo .circle4 {
+      width: 65px;
+    }
+    
+    .logo .circle5 {
+      width: 40px;
+    }
+    
+    .logo .circle5 .svg {
+      width: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .parent {
+      width: 250px;
+      height: 250px;
+      perspective: 600px;
+    }
+    
+    .content {
+      padding: 60px 30px 0px 15px;
+    }
+    
+    .content .title {
+      font-size: 16px;
+    }
+    
+    .content .text {
+      font-size: 12px;
+      margin-top: 12px;
+    }
+    
+    .bottom {
+      padding: 6px 8px;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+    }
+    
+    .bottom .social-buttons-container {
+      gap: 8px;
+    }
+    
+    .bottom .social-buttons-container .social-button {
+      width: 22px;
+      padding: 3px;
+    }
+    
+    .bottom .social-buttons-container .social-button .svg {
+      width: 10px;
+    }
+    
+    .bottom .view-more .view-more-button {
+      font-size: 10px;
+    }
+    
+    .logo .circle1 {
+      width: 120px;
+    }
+    
+    .logo .circle2 {
+      width: 100px;
+    }
+    
+    .logo .circle3 {
+      width: 80px;
+    }
+    
+    .logo .circle4 {
+      width: 60px;
+    }
+    
+    .logo .circle5 {
+      width: 35px;
+    }
+    
+    .logo .circle5 .svg {
+      width: 14px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .parent {
+      width: 220px;
+      height: 220px;
+      perspective: 500px;
+    }
+    
+    .content {
+      padding: 50px 25px 0px 12px;
+    }
+    
+    .content .title {
+      font-size: 14px;
+    }
+    
+    .content .text {
+      font-size: 11px;
+      margin-top: 10px;
+    }
+    
+    .bottom {
+      padding: 5px 6px;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+    }
+    
+    .bottom .social-buttons-container {
+      gap: 6px;
+    }
+    
+    .bottom .social-buttons-container .social-button {
+      width: 20px;
+      padding: 2px;
+    }
+    
+    .bottom .social-buttons-container .social-button .svg {
+      width: 9px;
+    }
+    
+    .bottom .view-more .view-more-button {
+      font-size: 9px;
+    }
+    
+    .logo .circle1 {
+      width: 100px;
+    }
+    
+    .logo .circle2 {
+      width: 85px;
+    }
+    
+    .logo .circle3 {
+      width: 70px;
+    }
+    
+    .logo .circle4 {
+      width: 55px;
+    }
+    
+    .logo .circle5 {
+      width: 30px;
+    }
+    
+    .logo .circle5 .svg {
+      width: 12px;
+    }
+  }
+
+  /* Disable 3D effects on mobile for better performance */
+  @media (max-width: 768px) {
+    .parent:hover .card {
+      transform: none;
+      box-shadow: rgba(5, 71, 17, 0.2) 0px 25px 25px -5px;
+    }
+    
+    .parent:hover .card .bottom .social-buttons-container .social-button {
+      transform: none;
+      box-shadow: rgba(5, 71, 17, 0.5) 0px 7px 5px -5px;
+    }
+    
+    .parent:hover .card .logo .circle2,
+    .parent:hover .card .logo .circle3,
+    .parent:hover .card .logo .circle4,
+    .parent:hover .card .logo .circle5 {
+      transform: translate3d(0, 0, 20px);
+    }
+  }
+
+  /* Touch-friendly improvements for mobile */
+  @media (max-width: 768px) {
+    .bottom .social-buttons-container .social-button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .bottom .view-more {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
   }
