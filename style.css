@@ -1,3 +1,13 @@
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 10px;
+}
+
 /* Navigation Styles */
 /* Navigation Styles */
 .nav-container {
@@ -9,8 +19,6 @@
     align-items: center;
     gap: 15px;
 }
-
-/* Hamburger Menu */
 .hamburger-menu {
     width: 50px;
     height: 50px;
@@ -26,36 +34,187 @@
     position: relative;
     z-index: 1001;
     flex-shrink: 0;
+    overflow: hidden;
+    border: solid 3px white;
+    box-shadow: 0px 00px 15px;
 }
 
+/* Pulsing animation when active */
+.hamburger-menu.active {
+    animation: pulseActive 2s ease-in-out infinite;
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+}
+
+/* Glow effect on hover */
 .hamburger-menu:hover {
     transform: scale(1.1);
     box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
 }
 
+/* Active state with enhanced glow */
+.hamburger-menu.active:hover {
+    transform: scale(1.15);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+/* Ripple effect */
+.hamburger-menu::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+}
+
+.hamburger-menu.active::before {
+    width: 80px;
+    height: 80px;
+    animation: ripple 2s ease-in-out infinite;
+}
+
+/* Enhanced hamburger lines */
 .hamburger-menu span {
     width: 25px;
     height: 3px;
     background: white;
     margin: 3px 0;
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-origin: center;
+    position: relative;
 }
 
-/* Hamburger Animation */
+/* Enhanced hamburger animation */
 .hamburger-menu.active span:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
 }
 
 .hamburger-menu.active span:nth-child(2) {
     opacity: 0;
+    transform: scale(0);
 }
 
 .hamburger-menu.active span:nth-child(3) {
     transform: rotate(-45deg) translate(6px, -6px);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
 }
 
+/* Hover effects on lines */
+.hamburger-menu:hover span {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes pulseActive {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Bounce animation on click */
+.hamburger-menu:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Floating animation when menu is open */
+.hamburger-menu.active {
+    animation: floatActive 3s ease-in-out infinite;
+}
+
+@keyframes floatActive {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Glow trail effect */
+.hamburger-menu::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.hamburger-menu.active::after {
+    opacity: 1;
+    animation: glowRotate 3s linear infinite;
+}
+
+@keyframes glowRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .hamburger-menu span {
+        width: 22px;
+        height: 2.5px;
+    }
+    
+    .hamburger-menu.active::before {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hamburger-menu {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .hamburger-menu span {
+        width: 20px;
+        height: 2px;
+    }
+    
+    .hamburger-menu.active::before {
+        width: 60px;
+        height: 60px;
+    }
+}
 /* Navigation Menu */
 .link-selection {
     display: flex;
@@ -291,18 +450,6 @@
   
   
   
-  
-  
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
-    color: #2d3748;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 10px;
-}
-
 /* Container styles */
 .container {
     max-width: 1400px;
@@ -747,9 +894,11 @@ body {
 }
 
 .profile-links {
-    display: flex;
-    gap: 15px;
+    display: flex !important;
+    gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-link {
@@ -1540,11 +1689,16 @@ body {
     .profile-links {
         justify-content: center;
         gap: 10px;
+        display: flex !important;
+        flex-wrap: wrap;
+        flex-direction: row;
     }
     
     .profile-link {
         padding: 10px 16px;
         font-size: 13px;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
     
     .content-item {
@@ -1653,7 +1807,13 @@ body {
     .container {
         margin: 2px;
     }
-    
+    .profile-links {
+        justify-content: center;
+        gap: 10px;
+        display: flex !important;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
     .title-container {
         padding: 10px 15px;
     }
@@ -1684,15 +1844,14 @@ body {
         font-size: 13px;
     }
     
-    .profile-links {
-        flex-direction: column;
-        align-items: center;
-    }
+    
+    
     
     .profile-link {
-        width: 100%;
-        max-width: 200px;
-        justify-content: center;
+        padding: 10px 16px;
+        font-size: 13px;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
     
     .content-item,
