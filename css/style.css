@@ -1964,7 +1964,7 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     inset: -16px; /* allow some space around card */
     pointer-events: none;
-    z-index: 2;
+    z-index: 5; /* raised for mobile stacking contexts */
 }
 
 .floating-tag {
@@ -1980,6 +1980,7 @@ h1, h2, h3, h4, h5, h6 {
     backdrop-filter: blur(6px);
     pointer-events: auto;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 5; /* ensure above avatar/content */
 }
 
 [data-theme="dark"] .floating-tag {
@@ -2009,24 +2010,24 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile tuning */
 @media (max-width: 768px) {
-    .floating-tag { font-size: 0.7rem; padding: 0.3rem 0.6rem; opacity: 0.85; pointer-events: none; }
-    /* keep tags within viewport edges */
-    .floating-tags { inset: -8px; }
-    .tag-1 { top: -4px; left: -4px; }
-    .tag-2 { right: -6px; top: 12%; }
-    .tag-3 { left: -6px; bottom: 14%; }
-    .tag-4 { right: -6px; bottom: -4px; }
-    .tag-5 { left: calc(100% + 4px); }
-    .tag-6 { right: calc(100% + 4px); }
+    .floating-tag { font-size: 0.7rem; padding: 0.3rem 0.6rem; opacity: 0.9; pointer-events: none; }
+    .floating-tags { inset: 0; }
+    .tag-1 { top: -2px; left: -2px; }
+    .tag-2 { right: -2px; top: 12%; }
+    .tag-3 { left: -2px; bottom: 12%; }
+    .tag-4 { right: -2px; bottom: -2px; }
+    .tag-5 { left: calc(100% + 2px); }
+    .tag-6 { right: calc(100% + 2px); }
 }
 
 @media (max-width: 480px) {
-    .floating-tag { font-size: 0.65rem; padding: 0.25rem 0.5rem; opacity: 0.8; pointer-events: none; }
-    .floating-tags { inset: -4px; }
-    /* simplify to 4 tags to reduce clutter */
-    .tag-5, .tag-6 {  }
+    .floating-tag { font-size: 0.62rem; padding: 0.22rem 0.45rem; opacity: 0.85; }
+    .floating-tags { inset: 0; }
+    /* show all tags with compact positions */
     .tag-1 { top: -2px; left: -2px; }
     .tag-2 { right: -2px; top: 10%; }
-    .tag-3 { left: -2px; bottom: 12%; }
+    .tag-3 { left: -2px; bottom: 10%; }
     .tag-4 { right: -2px; bottom: -2px; }
+    .tag-5 { left: calc(100% + 2px); top: 65%; transform: translateY(-50%); }
+    .tag-6 { right: calc(100% + 2px); top: 35%; transform: translateY(-50%); }
 }
