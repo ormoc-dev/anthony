@@ -554,7 +554,7 @@ class CertificateModal {
             },
             'topcit-12th': {
                 title: '12th TOPCIT Philippines Certificate',
-                date: '2024',
+                date: '2025',
                 institution: 'WESTERN LEYTE COLLEGE OF ORMOC CITY',
                 type: 'Global Certification',
                 description: 'Earned the 12th TOPCIT Philippines certificate, validating expertise in information technology and computer science.',
@@ -567,8 +567,8 @@ class CertificateModal {
                 institution: 'WESTERN LEYTE COLLEGE OF ORMOC CITY',
                 type: 'Academic Award',
                 description: 'Recognized for outstanding performance and excellence in programming courses, demonstrating exceptional coding skills and problem-solving abilities.',
-                image: './images/certificates/excellence-programming.jpg',
-                downloadUrl: './docs/certificates/excellence-programming.pdf'
+                image: './images/cert1.jpg',
+                downloadUrl: './docs/certificates/exc-prog.pdf'
             },
             'best-capstone': {
                 title: 'Best in Capstone Project Award',
@@ -576,8 +576,8 @@ class CertificateModal {
                 institution: 'WESTERN LEYTE COLLEGE OF ORMOC CITY',
                 type: 'Academic Award',
                 description: 'Awarded for developing the best capstone project, showcasing innovative thinking and technical implementation skills.',
-                image: './images/certificates/best-capstone.jpg',
-                downloadUrl: './docs/certificates/best-capstone.pdf'
+                image: './images/best-incapstone.jpg',
+                downloadUrl: './docs/certificates/best-in-capstone.pdf'
             },
             'leadership-doice': {
                 title: 'Leadership Certificate - DOICE',
@@ -585,16 +585,16 @@ class CertificateModal {
                 institution: 'DOICE (CICTE Organization)',
                 type: 'Leadership',
                 description: 'Served as an officer member in the DOICE organization, demonstrating leadership skills and community involvement.',
-                image: './images/certificates/leadership-doice.jpg',
+                image: './images/doice.jpg',
                 downloadUrl: './docs/certificates/leadership-doice.pdf'
             },
             'programming-club': {
-                title: 'Programming Club Membership',
+                title: 'Software Development Club',
                 date: '2024',
                 institution: 'Western Leyte Programming Club',
                 type: 'Community',
                 description: 'Active member of the Western Leyte Programming Club, contributing to the programming community and participating in various coding activities.',
-                image: './images/certificates/programming-club.jpg',
+                image: './images/prog-club.jpg',
                 downloadUrl: './docs/certificates/programming-club.pdf'
             }
         };
@@ -683,6 +683,82 @@ class CertificateModal {
     }
 }
 
+// Image Slider for Experience Section
+class ImageSlider {
+    constructor() {
+        this.sliders = document.querySelectorAll('.exp-image');
+        this.init();
+    }
+
+    init() {
+        this.sliders.forEach(slider => {
+            const container = slider.querySelector('.exp-image-container');
+            const images = container.querySelectorAll('img');
+            const prevBtn = slider.querySelector('.exp-image-nav.prev');
+            const nextBtn = slider.querySelector('.exp-image-nav.next');
+            
+            let currentIndex = 0;
+            const totalImages = images.length;
+            
+            // Set initial state
+            this.updateNavigation(prevBtn, nextBtn, currentIndex, totalImages);
+            
+            // Add event listeners
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+                this.slideTo(container, images, currentIndex, prevBtn, nextBtn, totalImages);
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalImages;
+                this.slideTo(container, images, currentIndex, prevBtn, nextBtn, totalImages);
+            });
+            
+            // Add touch/swipe support for mobile
+            let startX = 0;
+            let endX = 0;
+            
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+            
+            container.addEventListener('touchend', (e) => {
+                endX = e.changedTouches[0].clientX;
+                this.handleSwipe(startX, endX, currentIndex, totalImages, container, images, prevBtn, nextBtn);
+            });
+        });
+    }
+    
+    slideTo(container, images, index, prevBtn, nextBtn, totalImages) {
+        const imageWidth = images[0].offsetWidth + 16; // 16px for margin-right
+        const translateX = -index * imageWidth;
+        container.style.transform = `translateX(${translateX}px)`;
+        this.updateNavigation(prevBtn, nextBtn, index, totalImages);
+    }
+    
+    updateNavigation(prevBtn, nextBtn, currentIndex, totalImages) {
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalImages - 1;
+    }
+    
+    handleSwipe(startX, endX, currentIndex, totalImages, container, images, prevBtn, nextBtn) {
+        const swipeThreshold = 50;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0 && currentIndex < totalImages - 1) {
+                // Swipe left - next
+                currentIndex++;
+                this.slideTo(container, images, currentIndex, prevBtn, nextBtn, totalImages);
+            } else if (diff < 0 && currentIndex > 0) {
+                // Swipe right - previous
+                currentIndex--;
+                this.slideTo(container, images, currentIndex, prevBtn, nextBtn, totalImages);
+            }
+        }
+    }
+}
+
 // Initialize all classes when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new ThemeManager();
@@ -697,6 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new StatsCounter();
     new ProjectSlider();
     new CertificateModal();
+    new ImageSlider();
 });
 
 // Add CSS for additional animations
