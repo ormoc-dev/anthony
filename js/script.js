@@ -313,6 +313,10 @@ class ProjectSlider {
         this.currentIndex = 0;
         this.isAutoScrolling = false;
         this.autoScrollInterval = null;
+        this.isPointerDown = false;
+        this.startX = 0;
+        this.scrollLeftStart = 0;
+        this.visibilityObserver = null;
         
         this.init();
     }
@@ -323,12 +327,12 @@ class ProjectSlider {
         // Setup navigation arrows
         this.setupNavigationArrows();
         
-        // Auto-scroll on desktop
+        // Auto-scroll only on desktop and only when visible
         if (window.innerWidth >= 1024) {
-            this.startAutoScroll();
+            this.setupVisibilityObserver();
         }
         
-        // Pause auto-scroll on hover
+        // Pause auto-scroll on hover (desktop)
         this.projectsGrid.addEventListener('mouseenter', () => {
             if (window.innerWidth >= 1024) {
                 this.pauseAutoScroll();
@@ -344,8 +348,33 @@ class ProjectSlider {
         // Touch/swipe support for mobile
         this.setupTouchSupport();
         
-        // Keyboard navigation
+        // Grab-to-drag support (mouse / pointer)
+        this.setupPointerDrag();
+        
+        // Keyboard navigation (desktop)
         this.setupKeyboardNavigation();
+        
+        // Snap to nearest card after resize
+        window.addEventListener('resize', () => {
+            this.snapToNearest();
+        });
+    }
+    
+    setupVisibilityObserver() {
+        const section = document.getElementById('projects');
+        if (!section) return;
+        
+        this.visibilityObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.startAutoScroll();
+                } else {
+                    this.pauseAutoScroll();
+                }
+            });
+        }, { threshold: 0.4 });
+        
+        this.visibilityObserver.observe(section);
     }
     
     setupNavigationArrows() {
@@ -366,11 +395,12 @@ class ProjectSlider {
     }
     
     startAutoScroll() {
-        if (this.autoScrollInterval) return;
+        if (this.autoScrollInterval || window.innerWidth < 1024) return;
         
+        // Slow auto-scroll: every 6 seconds
         this.autoScrollInterval = setInterval(() => {
             this.scrollToNext();
-        }, 3000); // Scroll every 3 seconds
+        }, 6000);
     }
     
     pauseAutoScroll() {
@@ -381,22 +411,39 @@ class ProjectSlider {
     }
     
     scrollToNext() {
-        if (!this.projectsGrid) return;
+        if (!this.projectsGrid || !this.projects.length) return;
         
-        this.currentIndex = (this.currentIndex + 1) % this.projects.length;
+        this.currentIndex = Math.min(this.currentIndex + 1, this.projects.length - 1);
         const targetProject = this.projects[this.currentIndex];
         
         if (targetProject) {
-            // Calculate the scroll position within the grid
             const cardWidth = targetProject.offsetWidth;
-            const gap = 32; // 2rem gap between cards
+            const gap = this.getComputedGap();
             const scrollPosition = this.currentIndex * (cardWidth + gap);
             
-            this.projectsGrid.scrollTo({
-                left: scrollPosition,
-                behavior: 'smooth'
-            });
+            this.projectsGrid.scrollTo({ left: scrollPosition, behavior: 'smooth' });
         }
+    }
+    
+    scrollToPrevious() {
+        if (!this.projectsGrid || !this.projects.length) return;
+        
+        this.currentIndex = Math.max(this.currentIndex - 1, 0);
+        const targetProject = this.projects[this.currentIndex];
+        
+        if (targetProject) {
+            const cardWidth = targetProject.offsetWidth;
+            const gap = this.getComputedGap();
+            const scrollPosition = this.currentIndex * (cardWidth + gap);
+            
+            this.projectsGrid.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+        }
+    }
+    
+    getComputedGap() {
+        const styles = window.getComputedStyle(this.projectsGrid);
+        const gap = parseInt(styles.columnGap || styles.gap || '32', 10);
+        return Number.isNaN(gap) ? 32 : gap;
     }
     
     setupTouchSupport() {
@@ -405,53 +452,73 @@ class ProjectSlider {
         
         this.projectsGrid.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
-        });
+        }, { passive: true });
         
         this.projectsGrid.addEventListener('touchmove', (e) => {
             currentX = e.touches[0].clientX;
-        });
+        }, { passive: true });
         
         this.projectsGrid.addEventListener('touchend', () => {
             const diffX = startX - currentX;
-            const threshold = 50;
+            const threshold = 40; // Easier swipe
             
             if (Math.abs(diffX) > threshold) {
-                if (diffX > 0) {
-                    this.scrollToNext();
-                } else {
-                    this.scrollToPrevious();
-                }
+                if (diffX > 0) this.scrollToNext(); else this.scrollToPrevious();
+            } else {
+                this.snapToNearest();
             }
         });
     }
     
-    scrollToPrevious() {
-        if (!this.projectsGrid) return;
+    setupPointerDrag() {
+        const grid = this.projectsGrid;
         
-        this.currentIndex = this.currentIndex === 0 ? 
-            this.projects.length - 1 : this.currentIndex - 1;
-        const targetProject = this.projects[this.currentIndex];
+        const onPointerDown = (e) => {
+            this.isPointerDown = true;
+            grid.classList.add('dragging');
+            this.startX = e.pageX || e.clientX;
+            this.scrollLeftStart = grid.scrollLeft;
+        };
         
-        if (targetProject) {
-            // Calculate the scroll position within the grid
-            const cardWidth = targetProject.offsetWidth;
-            const gap = 32; // 2rem gap between cards
-            const scrollPosition = this.currentIndex * (cardWidth + gap);
-            
-            this.projectsGrid.scrollTo({
-                left: scrollPosition,
-                behavior: 'smooth'
-            });
-        }
+        const onPointerMove = (e) => {
+            if (!this.isPointerDown) return;
+            const x = e.pageX || e.clientX;
+            const walk = (this.startX - x); // drag amount
+            grid.scrollLeft = this.scrollLeftStart + walk;
+        };
+        
+        const onPointerUp = () => {
+            if (!this.isPointerDown) return;
+            this.isPointerDown = false;
+            grid.classList.remove('dragging');
+            this.snapToNearest();
+        };
+        
+        grid.addEventListener('mousedown', onPointerDown);
+        grid.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('mouseup', onPointerUp);
+        
+        // Prevent image dragging
+        grid.querySelectorAll('img').forEach(img => {
+            img.setAttribute('draggable', 'false');
+        });
+    }
+    
+    snapToNearest() {
+        if (!this.projectsGrid || !this.projects.length) return;
+        const cardWidth = this.projects[0].offsetWidth;
+        const gap = this.getComputedGap();
+        const total = cardWidth + gap;
+        const index = Math.round(this.projectsGrid.scrollLeft / total);
+        this.currentIndex = Math.max(0, Math.min(index, this.projects.length - 1));
+        const left = this.currentIndex * total;
+        this.projectsGrid.scrollTo({ left, behavior: 'smooth' });
     }
     
     setupKeyboardNavigation() {
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                this.scrollToPrevious();
-            } else if (e.key === 'ArrowRight') {
-                this.scrollToNext();
-            }
+            if (e.key === 'ArrowLeft') this.scrollToPrevious();
+            else if (e.key === 'ArrowRight') this.scrollToNext();
         });
     }
 }

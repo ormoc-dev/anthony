@@ -307,52 +307,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-card {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-    padding: 2.5rem;
-    border-radius: 24px;
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.1),
-        0 8px 16px rgba(0, 0, 0, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 4.5rem;
     text-align: center;
-    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
 }
 
-.profile-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
-    border-radius: 24px 24px 0 0;
-}
-
-.profile-card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-}
-
-.profile-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.15),
-        0 12px 24px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
 
 .profile-card:hover::after {
     opacity: 1;
@@ -440,9 +402,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .profile-badges {
     display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-top: 1rem;
+    
 }
 
 .profile-badge {
@@ -462,27 +422,9 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
 }
 
-.profile-badge::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
 
-.profile-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 6px 20px rgba(37, 99, 235, 0.4),
-        0 4px 12px rgba(37, 99, 235, 0.3);
-}
 
-.profile-badge:hover::before {
-    left: 100%;
-}
+
 
 /* About Section */
 .about {
@@ -1042,6 +984,7 @@ h1, h2, h3, h4, h5, h6 {
     
     .projects-container {
         gap: 0;
+        
     }
 }
 
@@ -1503,6 +1446,7 @@ h1, h2, h3, h4, h5, h6 {
     
     .profile-card {
         padding: 2rem;
+      
     }
     
     .profile-avatar {
@@ -1516,6 +1460,8 @@ h1, h2, h3, h4, h5, h6 {
     
     .profile-badges {
         gap: 0.5rem;
+        justify-content: center;
+        display: flex;
     }
     
     .profile-badge {
@@ -1523,9 +1469,15 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 0.7rem;
     }
     
+    /* Re-enable floating bubbles on mobile with smaller, subtler styles */
     .floating-element {
-        display: none;
+        display: block;
+        opacity: 0.08;
+        animation-duration: 7s;
     }
+    .floating-1 { width: 14px; height: 14px; top: 12px; right: 18px; }
+    .floating-2 { width: 12px; height: 12px; bottom: 24px; left: 14px; }
+    .floating-3 { width: 10px; height: 10px; top: 40px; left: 24px; }
     
     /* About Section */
     .about {
@@ -1733,7 +1685,7 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .brand-tags {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         gap: 0.4rem;
     }
@@ -1762,6 +1714,15 @@ h1, h2, h3, h4, h5, h6 {
         max-width: 250px;
         text-align: center;
     }
+    
+    /* Subtler bubbles on very small screens */
+    .floating-element {
+        opacity: 0.06;
+        animation-duration: 8s;
+    }
+    .floating-1 { width: 12px; height: 12px; top: 10px; right: 12px; }
+    .floating-2 { width: 10px; height: 10px; bottom: 18px; left: 10px; }
+    .floating-3 { width: 8px;  height: 8px;  top: 32px; left: 18px; }
     
     /* About Section */
     .about-stats {
@@ -1913,4 +1874,159 @@ h1, h2, h3, h4, h5, h6 {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* Draggable projects grid UX */
+.projects-grid {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.projects-grid.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto; /* smoother while dragging */
+}
+
+/* Projects: tighter mobile sizing overrides */
+@media (max-width: 768px) {
+    .projects {
+        padding: 40px 0;
+    }
+    
+    .projects-grid {
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+    }
+    
+    .project-card {
+        min-width: 260px;
+        max-width: 300px;
+    }
+    
+    .project-image {
+        height: 150px;
+    }
+    
+    .project-content {
+        padding: 1rem;
+    }
+    
+    .project-content h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects {
+        padding: 32px 0;
+    }
+    
+    .projects-grid {
+        gap: 0.5rem;
+        padding: 0.25rem 0;
+    }
+    
+    .project-card {
+        min-width: 240px;
+        max-width: 260px;
+    }
+    
+    .project-image {
+        height: 130px;
+    }
+    
+    .project-content {
+        padding: 0.9rem;
+    }
+    
+    .project-content h3 {
+        font-size: 0.95rem;
+    }
+    
+    .project-tech span {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.45rem;
+    }
+}
+
+/* Floating brand tags around profile card */
+.profile-card { overflow: visible; }
+
+.floating-tags {
+    position: absolute;
+    inset: -16px; /* allow some space around card */
+    pointer-events: none;
+    z-index: 2;
+}
+
+.floating-tag {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+    pointer-events: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .floating-tag {
+    background: rgba(17, 24, 39, 0.7);
+    color: var(--text-primary);
+}
+
+.floating-tag:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Place chips around the card and animate gently */
+.tag-1 { top: -8px; left: -8px; animation: floatChip1 6s ease-in-out infinite; }
+.tag-2 { top: 15%; right: -16px; animation: floatChip2 7s ease-in-out infinite 0.5s; }
+.tag-3 { bottom: 18%; left: -12px; animation: floatChip3 6.5s ease-in-out infinite 0.2s; }
+.tag-4 { bottom: -10px; right: -10px; animation: floatChip4 7.5s ease-in-out infinite 0.8s; }
+.tag-5 { top: 50%; left: calc(100% + 10px); transform: translateY(-50%); animation: floatChip5 7s ease-in-out infinite 0.3s; }
+.tag-6 { top: 50%; right: calc(100% + 10px); transform: translateY(-50%); animation: floatChip6 7.5s ease-in-out infinite 0.6s; }
+
+@keyframes floatChip1 { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(0,-8px);} }
+@keyframes floatChip2 { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(-6px,-6px);} }
+@keyframes floatChip3 { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(6px,-6px);} }
+@keyframes floatChip4 { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(-6px,6px);} }
+@keyframes floatChip5 { 0%,100%{ transform: translateY(-50%);} 50%{ transform: translate(0,-56%);} }
+@keyframes floatChip6 { 0%,100%{ transform: translateY(-50%);} 50%{ transform: translate(0,-44%);} }
+
+/* Mobile tuning */
+@media (max-width: 768px) {
+    .floating-tag { font-size: 0.7rem; padding: 0.3rem 0.6rem; opacity: 0.85; pointer-events: none; }
+    /* keep tags within viewport edges */
+    .floating-tags { inset: -8px; }
+    .tag-1 { top: -4px; left: -4px; }
+    .tag-2 { right: -6px; top: 12%; }
+    .tag-3 { left: -6px; bottom: 14%; }
+    .tag-4 { right: -6px; bottom: -4px; }
+    .tag-5 { left: calc(100% + 4px); }
+    .tag-6 { right: calc(100% + 4px); }
+}
+
+@media (max-width: 480px) {
+    .floating-tag { font-size: 0.65rem; padding: 0.25rem 0.5rem; opacity: 0.8; pointer-events: none; }
+    .floating-tags { inset: -4px; }
+    /* simplify to 4 tags to reduce clutter */
+    .tag-5, .tag-6 {  }
+    .tag-1 { top: -2px; left: -2px; }
+    .tag-2 { right: -2px; top: 10%; }
+    .tag-3 { left: -2px; bottom: 12%; }
+    .tag-4 { right: -2px; bottom: -2px; }
 }
