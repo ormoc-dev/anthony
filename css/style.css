@@ -2031,3 +2031,33 @@ h1, h2, h3, h4, h5, h6 {
     .tag-5 { left: calc(100% + 2px); top: 65%; transform: translateY(-50%); }
     .tag-6 { right: calc(100% + 2px); top: 35%; transform: translateY(-50%); }
 }
+
+@media (max-width: 768px) {
+    /* Make profile card transparent and borderless on mobile */
+    .profile-card {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+    .profile-card::before,
+    .profile-card::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ensure smallest screens also have a clean card */
+    .profile-card {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+    .profile-card::before,
+    .profile-card::after {
+        display: none !important;
+        content: none !important;
+    }
+}
